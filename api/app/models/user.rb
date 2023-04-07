@@ -10,5 +10,6 @@ class User < ApplicationRecord
   end
 
   def set_defaults
+    self.name ||= login
   end
 end
