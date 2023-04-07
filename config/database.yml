@@ -24,6 +24,8 @@ default: &default
 development:
   <<: *default
   database: secure_labs_lab_5_api_development
+  username: viktor
+  password: root
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
