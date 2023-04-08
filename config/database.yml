@@ -22,10 +22,12 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *default
-  database: secure_labs_lab_5_api_development
-  username: viktor
-  password: root
+#  <<: *default
+#  database: secure_labs_lab_5_api_development
+#  username: viktor
+#  password: root
+  url: <%= ENV['DATABASE_URL'] %>
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -83,6 +85,4 @@ test:
 #
 production:
   <<: *default
-  database: secure_labs_lab_5_api_production
-  username: secure_labs_lab_5_api
-  password: <%= ENV["SECURE_LABS_LAB_5_API_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
