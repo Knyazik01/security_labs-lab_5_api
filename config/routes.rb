@@ -5,7 +5,6 @@ Rails.application.routes.draw do
 
   # user
   # resources :users, only: [:show, :create, :update, :destroy]
-  # resources :users, only: [:show]
   get '/me', to: 'users#show'
   post '/registration', to: 'users#create'
 end

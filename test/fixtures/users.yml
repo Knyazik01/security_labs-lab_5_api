@@ -4,12 +4,10 @@ one:
   name: MyString
   login: MyString
   password_digest: MyString
-  name: MyString
   balance: 1.5
 
 two:
   name: MyString
   login: MyString
   password_digest: MyString
-  name: MyString
   balance: 1.5
