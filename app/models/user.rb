@@ -1,10 +1,11 @@
 class User < ApplicationRecord
+  has_one :session
   has_many :e_wallets
 
   has_secure_password
   before_save :set_defaults
   after_create :create_user_wallets
-  before_destroy :delete_user_wallets
+  before_destroy :before_delete_user
 
   VALID_LOGIN_REGEX   = /\A\w+\z/
   VALID_LOGIN_MESSAGE = 'can only contain letters, numbers, or underscores'
@@ -31,7 +32,8 @@ class User < ApplicationRecord
     end
   end
 
-  def delete_user_wallets
+  def before_delete_user
+    self.session.destroy
     self.e_wallets.destroy_all
   end
 end
