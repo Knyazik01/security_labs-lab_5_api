@@ -12,9 +12,7 @@ class EWalletsController < ApplicationController
       render json: { error: 'Amount must be greater than 0' }, status: :unprocessable_entity
     else
       e_wallet = EWallet.where(id: params[:e_wallet_id], user_id: @current_user.id).first
-      unless e_wallet
-        render json: { error: 'Invalid e-wallet id' }, status: :unprocessable_entity
-      else
+      if e_wallet
         e_wallet.update(count: e_wallet.count + amount)
         if e_wallet.save
           user_wallets = EWallet.where(user_id: @current_user.id)
@@ -22,6 +20,8 @@ class EWalletsController < ApplicationController
         else
           render json: { error: 'Failed to add funds to e-wallet' }, status: :unprocessable_entity
         end
+      else
+        render json: { error: 'Invalid e-wallet id' }, status: :unprocessable_entity
       end
     end
   end
