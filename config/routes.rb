@@ -10,4 +10,5 @@ Rails.application.routes.draw do
 
   # e_wallets
   get '/e-wallets', to: 'e_wallets#show'
+  patch '/add-to-e-wallet/:e_wallet_id', to: 'e_wallets#add_funds'
 end

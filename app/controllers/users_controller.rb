@@ -2,7 +2,11 @@ class UsersController < ApplicationController
   before_action :authorize_request, only: [:show]
 
   def show
-    render json: @current_user.as_json(except: :password_digest), status: :ok
+    render json:
+      @current_user.as_json(
+        include: { e_wallets: { include: :currency } },
+        except:  :password_digest
+      ), status: :ok
   end
 
   def create
@@ -10,7 +14,7 @@ class UsersController < ApplicationController
 
     if user.valid?
       if user.save
-        user_json = JSON.dump({ login: user_params[:login], password: user_params[:password] })
+        user_json   = JSON.dump({ login: user_params[:login], password: user_params[:password] })
         auth_string = AuthStringService.encrypt(user_json)
 
         # send_data auth_string, filename: 'auth_string', type: "text/plain", disposition: "attachment"
