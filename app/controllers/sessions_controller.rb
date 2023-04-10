@@ -11,8 +11,14 @@ class SessionsController < ApplicationController
 
         if session.save
           payload = { user_id: user.id, session_id: session.id }
-          token   = JwtService.encode(payload)
-          render json: { token: token }
+          token = JwtService.encode(payload)
+          render json: {
+            token: token,
+            user: user.as_json(
+              include: { e_wallets: { include: :currency } },
+              except: :password_digest
+            )
+          }, status: :ok
         else
           render json: { error: 'Cannot create session' }, status: :forbidden
         end
@@ -44,7 +50,7 @@ class SessionsController < ApplicationController
 =end
 
   def destroy
-    token           = request.headers['Authorization']&.split(' ')&.last
+    token = request.headers['Authorization']&.split(' ')&.last
     payload, header = JwtService.decode(token)
 
     if payload && header['alg'] == 'HS256'
