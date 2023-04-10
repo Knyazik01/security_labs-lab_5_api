@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
       session = Session.find_by(id: payload['session_id'])
       session.destroy if session
 
-      render json: { message: 'Successfully logged out' }
+      render json: { message: 'Successfully logged out' }, status: :ok
     else
       render json: { error: 'Invalid token' }, status: :unauthorized
     end

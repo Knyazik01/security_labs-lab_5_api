@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_one :session
   has_many :e_wallets
+  has_many :purchases
 
   has_secure_password
   before_save :set_defaults

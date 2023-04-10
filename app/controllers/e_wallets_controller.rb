@@ -3,7 +3,7 @@ class EWalletsController < ApplicationController
 
   def show
     user_wallets = EWallet.where(user_id: @current_user.id)
-    render json: user_wallets.to_json(include: :currency, except: :user_id), status: :ok
+    render json: user_wallets.as_json(include: :currency, except: :user_id), status: :ok
   end
 
   def add_funds
@@ -15,8 +15,9 @@ class EWalletsController < ApplicationController
       if e_wallet
         e_wallet.update(count: e_wallet.count + amount)
         if e_wallet.save
+          # @todo add row to transactions table
           user_wallets = EWallet.where(user_id: @current_user.id)
-          render json: user_wallets.to_json(include: :currency)
+          render json: user_wallets.to_json(include: :currency), status: :ok
         else
           render json: { error: 'Failed to add funds to e-wallet' }, status: :unprocessable_entity
         end
