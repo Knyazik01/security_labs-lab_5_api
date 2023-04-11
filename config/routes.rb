@@ -19,4 +19,7 @@ Rails.application.routes.draw do
 
   # purchases
   post '/product-buy/:product_id', to: 'purchases#create'
+
+  # transactions
+  get '/transactions', to: 'transactions#index'
 end

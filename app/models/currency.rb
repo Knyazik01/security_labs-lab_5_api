@@ -1,5 +1,6 @@
 class Currency < ApplicationRecord
   has_many :e_wallets
+  has_many :transactions
 
   after_create :create_wallets_for_currency
   before_destroy :delete_wallets_for_currency

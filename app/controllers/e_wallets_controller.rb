@@ -7,15 +7,19 @@ class EWalletsController < ApplicationController
   end
 
   def add_funds
-    amount = params[:amount].to_f
+    amount = params[:amount].to_f.truncate(2)
     if amount <= 0
       render json: { error: 'Amount must be greater than 0' }, status: :unprocessable_entity
     else
       e_wallet = EWallet.where(id: params[:e_wallet_id], user_id: @current_user.id).first
       if e_wallet
-        e_wallet.update(count: e_wallet.count + amount)
-        if e_wallet.save
-          # @todo add row to transactions table
+        is_transaction_success = TransactionService.create(
+          @current_user,
+          e_wallet.currency,
+          profit: amount
+        )
+
+        if is_transaction_success
           user_wallets = EWallet.where(user_id: @current_user.id)
           render json: user_wallets.to_json(include: :currency), status: :ok
         else

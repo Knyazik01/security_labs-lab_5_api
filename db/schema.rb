@@ -10,31 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_10_213633) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_11_213655) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "btree_gin"
-  enable_extension "btree_gist"
-  enable_extension "citext"
-  enable_extension "cube"
-  enable_extension "dblink"
-  enable_extension "dict_int"
-  enable_extension "dict_xsyn"
-  enable_extension "earthdistance"
-  enable_extension "fuzzystrmatch"
-  enable_extension "hstore"
-  enable_extension "intarray"
-  enable_extension "ltree"
-  enable_extension "pg_stat_statements"
-  enable_extension "pg_trgm"
-  enable_extension "pgcrypto"
-  enable_extension "pgrowlocks"
-  enable_extension "pgstattuple"
   enable_extension "plpgsql"
-  enable_extension "plv8"
-  enable_extension "tablefunc"
-  enable_extension "unaccent"
-  enable_extension "uuid-ossp"
-  enable_extension "xml2"
 
   create_table "currencies", force: :cascade do |t|
     t.string "name"
@@ -47,14 +25,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_10_213633) do
   create_table "e_wallets", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "currency_id", null: false
-    t.float "count", default: 0.0
+    t.decimal "count", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|
     t.string "name"
-    t.float "price"
+    t.decimal "price", precision: 10, scale: 2
     t.integer "currency_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -74,6 +52,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_10_213633) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "currency_id", null: false
+    t.decimal "balance_before", precision: 10, scale: 2
+    t.decimal "profit", precision: 10, scale: 2
+    t.decimal "bill", precision: 10, scale: 2
+    t.decimal "balance", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency_id"], name: "index_transactions_on_currency_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "login", null: false
@@ -83,4 +74,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_10_213633) do
   end
 
   add_foreign_key "sessions", "users"
+  add_foreign_key "transactions", "currencies"
+  add_foreign_key "transactions", "users"
 end
