@@ -37,6 +37,39 @@ class ProductsController < ApplicationController
     end
   end
 
+  def buy_multi_products
+    product_ids = params[:product_ids] || []
+
+    # check if products selected
+    if product_ids.size === 0
+      render json: { error: "No product selected" }, status: :unprocessable_entity
+      return
+    end
+
+    products = Product.where(id: product_ids)
+    puts products.map{|i| i.inspect}
+
+    # check if all products exist
+    unless products.length == product_ids.length
+      render json: { error: "One or more products do not exist" }, status: :unprocessable_entity
+      return
+    end
+
+    result = ProductService.buy_multi_products(products, @current_user)
+
+    if result[:success]
+      all_user_products = ProductService.get_products_user_bought(@current_user.id)
+      render json: {
+        message: 'Products have been successfully purchased',
+        bought_products: all_user_products.as_json(include: :currency),
+      }, status: :ok
+    else
+      render json: {
+        error: 'You cannot purchase these products'
+      }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def authorize_request

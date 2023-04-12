@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/products-bought', to: 'products#users_bought'
   get '/products-can-buy', to: 'products#user_can_buy'
   get '/product-download/:product_id', to: 'products#download_file'
+  post '/product-buy-multi', to: 'products#buy_multi_products'
 
   # purchases
   post '/product-buy/:product_id', to: 'purchases#create'
