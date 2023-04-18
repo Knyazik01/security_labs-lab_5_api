@@ -7,8 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # todo change to real origins on ready
-    origins "*"
+    origins %w[localhost:3000 https://lab-5-frontend.netlify.app]
 
     resource "*",
       headers: :any,
